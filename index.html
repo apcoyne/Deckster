@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="description" content="Deckster — create, study, and share flashcard decks. No sign-up needed." />
+  <title>Deckster</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,400&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div id="app">
+
+    <!-- ===================== HOME SCREEN ===================== -->
+    <section id="screen-home" class="screen active">
+      <div class="home-wrap">
+        <header class="home-hero">
+          <div class="logo-mark">D</div>
+          <h1 class="home-title">Deckster</h1>
+          <p class="home-sub">Create flashcards. Share a link. Study anywhere.</p>
+        </header>
+
+        <div class="home-actions">
+          <button id="btn-new-deck" class="btn-primary btn-large">
+            <span class="btn-icon-left">+</span>
+            Create a new deck
+          </button>
+
+          <div class="divider"><span>or</span></div>
+
+          <div class="paste-area">
+            <label for="paste-input" class="paste-label">Paste a deck link to start studying</label>
+            <div class="paste-row">
+              <input id="paste-input" type="text" class="input" placeholder="https://deckster.app/#deck=..." />
+              <button id="btn-load-link" class="btn-secondary">Load</button>
+            </div>
+            <p id="paste-error" class="error-text hidden"></p>
+          </div>
+        </div>
+
+        <footer class="home-footer">
+          <p>No sign-up. No tracking. Your decks live in the link.</p>
+        </footer>
+      </div>
+    </section>
+
+    <!-- ===================== CREATE SCREEN ===================== -->
+    <section id="screen-create" class="screen">
+      <header class="screen-header">
+        <button class="btn-back" data-goto="home">← Home</button>
+        <h2 class="screen-title">Create a deck</h2>
+        <div class="header-spacer"></div>
+      </header>
+
+      <div class="create-wrap">
+        <!-- Deck title -->
+        <div class="field">
+          <label for="deck-title-input" class="field-label">Deck title</label>
+          <input id="deck-title-input" type="text" class="input" placeholder="e.g. Biology 101 — Cell structure" maxlength="120" />
+        </div>
+
+        <!-- Deck description (optional) -->
+        <div class="field">
+          <label for="deck-desc-input" class="field-label">Description <span class="optional">(optional)</span></label>
+          <input id="deck-desc-input" type="text" class="input" placeholder="A short note about this deck" maxlength="200" />
+        </div>
+
+        <!-- Tab toggle: one-by-one vs bulk -->
+        <div class="tab-bar">
+          <button class="tab active" data-tab="single">Add cards</button>
+          <button class="tab" data-tab="bulk">Bulk import</button>
+        </div>
+
+        <!-- Single card entry -->
+        <div id="tab-single" class="tab-panel active">
+          <div class="card-form">
+            <div class="card-form-fields">
+              <div class="field">
+                <label class="field-label">Front</label>
+                <input id="card-front" type="text" class="input" placeholder="Word, question, or concept" />
+              </div>
+              <div class="field">
+                <label class="field-label">Back</label>
+                <textarea id="card-back" class="input textarea" placeholder="Answer, definition, or explanation" rows="2"></textarea>
+              </div>
+            </div>
+            <button id="btn-add-card" class="btn-primary">Add card</button>
+          </div>
+        </div>
+
+        <!-- Bulk import -->
+        <div id="tab-bulk" class="tab-panel">
+          <div class="bulk-area">
+            <label class="field-label">Paste your cards</label>
+            <p class="bulk-hint">One card per line. Separate front and back with a <strong>tab</strong> or <strong>semicolon</strong> (;).<br/>
+            Perfect for copying from a spreadsheet — column A = front, column B = back.</p>
+            <textarea id="bulk-input" class="input textarea bulk-textarea" placeholder="mitochondria; powerhouse of the cell
+photosynthesis; process by which plants convert light to energy
+osmosis; movement of water through a membrane" rows="8"></textarea>
+            <button id="btn-import" class="btn-primary">Import cards</button>
+            <p id="bulk-error" class="error-text hidden"></p>
+          </div>
+        </div>
+
+        <!-- Card list preview -->
+        <div class="card-list-section">
+          <div class="card-list-header">
+            <h3 class="card-list-title">Cards <span id="card-count-badge" class="badge">0</span></h3>
+            <button id="btn-clear-cards" class="btn-text-small hidden">Clear all</button>
+          </div>
+          <div id="card-list" class="card-list">
+            <div class="card-list-empty">
+              <p>No cards yet. Add some above.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Generate link -->
+        <div class="create-footer">
+          <button id="btn-generate" class="btn-primary btn-large" disabled>
+            Generate shareable link
+          </button>
+          <p class="create-footer-note">You need at least 2 cards to create a deck.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SHARE SCREEN ===================== -->
+    <section id="screen-share" class="screen">
+      <header class="screen-header">
+        <button class="btn-back" data-goto="home">← Home</button>
+        <h2 class="screen-title">Your deck is ready</h2>
+        <div class="header-spacer"></div>
+      </header>
+
+      <div class="share-wrap">
+        <div class="share-card">
+          <h3 id="share-deck-title" class="share-deck-title"></h3>
+          <p id="share-deck-meta" class="share-deck-meta"></p>
+        </div>
+
+        <div class="share-link-area">
+          <label class="field-label">Share this link</label>
+          <div class="share-link-row">
+            <input id="share-link" type="text" class="input share-link-input" readonly />
+            <button id="btn-copy" class="btn-secondary">Copy</button>
+          </div>
+          <p id="copy-confirm" class="success-text hidden">Copied to clipboard!</p>
+        </div>
+
+        <div class="share-qr">
+          <canvas id="qr-canvas" width="200" height="200"></canvas>
+          <p class="qr-hint">Scan to study on your phone</p>
+        </div>
+
+        <div class="share-actions">
+          <button id="btn-study-own" class="btn-primary btn-large">Study this deck now</button>
+          <button class="btn-ghost" data-goto="home">Create another deck</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== STUDY SCREEN ===================== -->
+    <section id="screen-study" class="screen">
+      <header class="screen-header">
+        <button class="btn-back" data-goto="home">← Home</button>
+        <h2 id="study-title" class="screen-title"></h2>
+        <button id="study-shuffle" class="btn-icon-small" title="Shuffle">⤨</button>
+      </header>
+
+      <div class="study-wrap">
+        <div class="progress-row">
+          <div class="progress-bar">
+            <div id="study-progress-fill" class="progress-fill"></div>
+          </div>
+          <span id="study-progress-text" class="progress-text">0 / 0</span>
+        </div>
+
+        <!-- Completion screen -->
+        <div id="study-complete" class="study-complete hidden">
+          <div class="complete-icon">✓</div>
+          <h3>Deck complete</h3>
+          <p>You've worked through every card. Nice work.</p>
+          <div class="complete-actions">
+            <button id="btn-restart" class="btn-primary">Start over</button>
+            <button class="btn-ghost" data-goto="home">Back to home</button>
+          </div>
+        </div>
+
+        <!-- Flashcard -->
+        <div id="study-card-wrap" class="study-card-wrap">
+          <div id="study-card" class="study-card">
+            <div class="study-face study-front">
+              <span id="study-counter" class="study-counter"></span>
+              <div class="study-center">
+                <div id="study-front-text" class="study-front-text"></div>
+              </div>
+              <span class="study-hint">tap to flip</span>
+            </div>
+            <div class="study-face study-back">
+              <span class="study-counter-label">answer</span>
+              <div class="study-center">
+                <div id="study-back-text" class="study-back-text"></div>
+              </div>
+              <span class="study-hint">tap to flip back</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="study-controls" class="study-controls">
+          <button id="study-prev" class="btn-control" aria-label="Previous">←</button>
+          <button id="study-learned" class="btn-learned">Mark as learned</button>
+          <button id="study-next" class="btn-control" aria-label="Next">→</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
